@@ -1,0 +1,42 @@
+# Optional: deploy via GitHub Actions.
+# Easier option (recommended): link the GitHub repo in the Vercel dashboard —
+# every push to main deploys automatically with no Actions setup.
+#
+# To use this workflow instead:
+#   1. vercel link   (creates .vercel/project.json — do not commit secrets)
+#   2. Add GitHub repo secrets:
+#        VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
+#   3. Push to main
+
+name: Deploy production
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Production build
+        run: npm run build
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
+          working-directory: ./
