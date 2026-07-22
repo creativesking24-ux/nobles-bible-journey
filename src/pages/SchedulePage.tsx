@@ -55,8 +55,8 @@ export function SchedulePage() {
   if (!week) return null
 
   return (
-    <div className="safe-pt safe-x flex h-full flex-col">
-      <div className="px-4 pt-4 landscape:px-6 landscape:pt-3">
+    <div className="safe-pt flex h-full flex-col">
+      <div className="app-gutter-x pt-4 landscape:pt-3">
         <PageHeader
           eyebrow="14 weeks"
           title="Study plan"
@@ -74,7 +74,7 @@ export function SchedulePage() {
       </div>
 
       {/* Sticky week picker */}
-      <div className="sticky top-0 z-20 border-b border-theme bg-navy/80 px-4 pb-3 backdrop-blur-xl landscape:px-5 landscape:pb-2">
+      <div className="sticky top-0 z-20 border-b border-theme bg-navy/80 app-gutter-x pb-3 backdrop-blur-xl landscape:pb-2">
         <div ref={tabsRef} className="no-scrollbar flex gap-2 overflow-x-auto py-1">
           {weeks.map((w) => {
             const wDays = days.filter((d) => d.weekNumber === w.weekNumber)
@@ -105,7 +105,7 @@ export function SchedulePage() {
         </div>
       </div>
 
-      <div className="flex-1 space-y-3 overflow-y-auto px-4 pb-6 pt-4">
+      <div className="app-gutter-x flex-1 space-y-3.5 overflow-y-auto pb-8 pt-4">
         {/* Week summary */}
         <Surface hero className="animate-fade-up !p-4">
           <div className="flex items-start justify-between gap-3">

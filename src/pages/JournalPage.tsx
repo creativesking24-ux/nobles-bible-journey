@@ -128,7 +128,7 @@ export function JournalPage() {
       />
 
       {/* Category tabs */}
-      <div className="no-scrollbar -mx-4 mb-5 flex gap-2 overflow-x-auto px-4 pb-0.5">
+      <div className="no-scrollbar app-bleed-x mb-5 flex gap-2 overflow-x-auto pb-0.5">
         {TABS.map((t) => (
           <button
             key={t.id}
@@ -249,14 +249,14 @@ export function JournalPage() {
       <button
         type="button"
         onClick={openNew}
-        className="journal-fab fixed bottom-28 right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-gold-soft to-gold text-navy shadow-xl shadow-gold/40 transition hover:scale-105 active:scale-95 landscape:bottom-16 landscape:right-3 landscape:h-11 landscape:w-11"
+        className="journal-fab fixed bottom-28 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-gold-soft to-gold text-navy shadow-xl shadow-gold/40 transition hover:scale-105 active:scale-95 landscape:bottom-16 landscape:right-5 landscape:h-11 landscape:w-11"
         aria-label="Add entry"
       >
         <Plus className="h-7 w-7" strokeWidth={2.5} />
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/65 p-4 backdrop-blur-sm sm:items-center">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/65 app-gutter-x py-4 backdrop-blur-sm sm:items-center sm:py-6">
           <div className="surface w-full max-w-lg animate-fade-up rounded-[1.5rem] !p-5 shadow-2xl sm:!p-6">
             <div className="flex items-start justify-between gap-2">
               <div>

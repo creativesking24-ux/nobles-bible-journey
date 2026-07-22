@@ -11,7 +11,7 @@ export function PageShell({
 }) {
   return (
     <div
-      className={`page-shell safe-pt safe-x relative px-4 pb-10 pt-4 landscape:px-6 landscape:pb-6 landscape:pt-3 ${className}`}
+      className={`page-shell safe-pt relative pb-10 pt-4 landscape:pb-6 landscape:pt-3 ${className}`}
     >
       {children}
     </div>
@@ -30,7 +30,7 @@ export function PageHeader({
   action?: ReactNode
 }) {
   return (
-    <header className="mb-6 flex items-start justify-between gap-3">
+    <header className="mb-6 flex items-start justify-between gap-3 sm:mb-7">
       <div className="min-w-0">
         {eyebrow && <p className="eyebrow mb-1.5">{eyebrow}</p>}
         <h1 className="font-serif text-[1.7rem] font-bold leading-tight tracking-tight text-parchment">

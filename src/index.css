@@ -134,6 +134,14 @@ html.light body {
     linear-gradient(180deg, #f0e8d8 0%, #e4d9c4 45%, #ddd2bc 100%);
 }
 
+/* Horizontal breathing room — min 20px + device safe areas */
+:root,
+html.dark,
+html.light {
+  --app-gutter-x: 1.25rem; /* 20px — comfortable mobile edge inset */
+  --app-gutter-x-lg: 1.5rem; /* 24px — landscape / wider frames */
+}
+
 /* Safe areas (portrait + landscape notches / home indicator) */
 .safe-pb {
   padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
@@ -142,8 +150,43 @@ html.light body {
   padding-top: max(0.75rem, env(safe-area-inset-top, 0px));
 }
 .safe-x {
-  padding-left: max(0px, env(safe-area-inset-left, 0px));
-  padding-right: max(0px, env(safe-area-inset-right, 0px));
+  padding-left: max(var(--app-gutter-x), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--app-gutter-x), env(safe-area-inset-right, 0px));
+}
+
+/* Page / section outer inset (preferred for main content) */
+.app-gutter-x {
+  padding-left: max(var(--app-gutter-x), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--app-gutter-x), env(safe-area-inset-right, 0px));
+}
+
+/* Negative margin for full-bleed scroll rows that still respect gutters via inner pad */
+.app-bleed-x {
+  margin-left: calc(-1 * max(var(--app-gutter-x), env(safe-area-inset-left, 0px)));
+  margin-right: calc(-1 * max(var(--app-gutter-x), env(safe-area-inset-right, 0px)));
+  padding-left: max(var(--app-gutter-x), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--app-gutter-x), env(safe-area-inset-right, 0px));
+}
+
+.page-shell {
+  padding-left: max(var(--app-gutter-x), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--app-gutter-x), env(safe-area-inset-right, 0px));
+}
+
+@media (min-width: 480px) {
+  :root,
+  html.dark,
+  html.light {
+    --app-gutter-x: 1.5rem;
+  }
+}
+
+@media (orientation: landscape) {
+  :root,
+  html.dark,
+  html.light {
+    --app-gutter-x: var(--app-gutter-x-lg);
+  }
 }
 
 /* Prevent horizontal bounce / overflow when rotating */
@@ -733,7 +776,7 @@ html.light .app-frame {
   /* Smaller floating journal FAB so it doesn’t cover content */
   .journal-fab {
     bottom: 4.25rem !important;
-    right: 0.75rem !important;
+    right: max(1.25rem, env(safe-area-inset-right, 0px)) !important;
     width: 2.75rem !important;
     height: 2.75rem !important;
   }
