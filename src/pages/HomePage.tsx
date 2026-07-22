@@ -92,19 +92,21 @@ export function HomePage() {
       />
 
       {/* Compact header */}
-      <header className="animate-fade-up mb-5 flex items-start justify-between gap-3">
-        <div className="min-w-0">
+      <header className="animate-fade-up mb-5 flex w-full items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
           <p className="eyebrow mb-1">
             Week {week} of 14 · {progress.percent}%
           </p>
-          <h1 className="font-serif text-[1.6rem] font-bold leading-tight text-parchment">
+          <h1 className="font-serif text-[1.6rem] font-bold leading-snug text-parchment">
             Hello, {firstName}
           </h1>
           <p className="mt-1 text-sm text-parchment-muted">
             {format(new Date(), 'EEEE · MMMM d')}
           </p>
         </div>
-        <ThemeToggle variant="icon" />
+        <div className="shrink-0">
+          <ThemeToggle variant="icon" />
+        </div>
       </header>
 
       {/* First-time welcome */}
@@ -156,10 +158,10 @@ export function HomePage() {
 
           {today ? (
             <>
-              <p className="font-serif text-[1.9rem] font-bold leading-snug text-gold-soft">
+              <p className="w-full font-serif text-[1.85rem] font-bold leading-snug text-gold-soft">
                 {today.reading}
               </p>
-              <p className="mt-2.5 text-sm leading-relaxed text-parchment-muted">
+              <p className="text-content mt-2.5 text-sm text-parchment-muted">
                 Week {today.weekNumber}
                 {today.isReview ? ' · Review day' : ' · Daily reading'}
                 {todayTheme ? ` · ${todayTheme}` : ''}
@@ -308,7 +310,7 @@ export function HomePage() {
             </div>
             <div>
               <p className="eyebrow">Encouragement</p>
-              <p className="mt-2.5 font-serif text-[0.98rem] leading-relaxed text-parchment">
+              <p className="text-reading mt-2.5 font-serif text-[0.98rem] text-parchment">
                 {verse}
               </p>
             </div>

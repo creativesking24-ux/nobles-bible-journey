@@ -38,7 +38,7 @@ export function ProgressPage() {
             <p className="mt-1.5 font-serif text-xl text-parchment">
               {progress.percent}% complete
             </p>
-            <p className="mt-1.5 text-sm leading-relaxed text-parchment-muted">
+            <p className="text-content mt-1.5 text-sm text-parchment-muted">
               {progress.completed} of {progress.total} days ·{' '}
               {progress.weeksCompleted}/14 weeks finished
             </p>
@@ -139,7 +139,7 @@ export function ProgressPage() {
         <p className="mt-2 text-sm leading-relaxed text-parchment/85">
           have completed the 90+ Day Bible Study Journey
         </p>
-        <div className="mx-auto mt-6 max-w-xs space-y-2.5 text-left text-sm">
+        <div className="mx-auto mt-6 w-full max-w-sm space-y-2.5 text-left text-sm sm:max-w-md">
           <CertRow label="Start" value="June 15, 2026" />
           <CertRow label="End" value="September 20, 2026" />
           <CertRow label="Books" value="Epistles + Proverbs + Revelation" />

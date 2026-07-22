@@ -76,7 +76,7 @@ export function HighlightsPage() {
                     <p className="text-xs font-bold uppercase tracking-wide text-gold">
                       {h.label || h.passageRef}:{h.verse}
                     </p>
-                    <p className="mt-1.5 font-serif text-sm leading-relaxed text-parchment">
+                    <p className="text-reading mt-1.5 w-full font-serif text-sm text-parchment">
                       <sup className="mr-1 font-bold text-gold">{h.verse}</sup>
                       {h.text || '…'}
                     </p>

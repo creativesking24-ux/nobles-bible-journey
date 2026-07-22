@@ -145,7 +145,7 @@ export function JournalPage() {
         ))}
       </div>
 
-      <p className="mb-5 text-sm leading-relaxed text-parchment-muted">{meta.prompt}</p>
+      <p className="text-content mb-5 w-full text-sm text-parchment-muted">{meta.prompt}</p>
 
       {/* First-time / empty guidance */}
       {totalEntries === 0 && dayNotes.length === 0 && (
@@ -183,7 +183,7 @@ export function JournalPage() {
       {entries.length === 0 && totalEntries === 0 && dayNotes.length > 0 && (
         <Surface className="mb-5 !p-5">
           <p className="eyebrow">From daily notes</p>
-          <p className="mt-2 text-sm leading-relaxed text-parchment-muted">
+          <p className="text-content mt-2 text-sm text-parchment-muted">
             You already have notes on {dayNotes.length} day
             {dayNotes.length === 1 ? '' : 's'}. Open a day to edit them, or start a
             category entry with +.
@@ -237,7 +237,7 @@ export function JournalPage() {
                 onClick={() => openEdit(e)}
                 className="mt-3.5 w-full text-left"
               >
-                <p className="whitespace-pre-wrap text-sm leading-[1.7] text-parchment/90">
+                <p className="text-reading w-full whitespace-pre-wrap text-[0.975rem] text-parchment/90">
                   {e.body}
                 </p>
               </button>
@@ -257,7 +257,7 @@ export function JournalPage() {
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/65 app-gutter-x py-4 backdrop-blur-sm sm:items-center sm:py-6">
-          <div className="surface w-full max-w-lg animate-fade-up rounded-[1.5rem] !p-5 shadow-2xl sm:!p-6">
+          <div className="surface app-frame w-full animate-fade-up rounded-[1.5rem] !p-5 shadow-2xl sm:!p-6">
             <div className="flex items-start justify-between gap-2">
               <div>
                 <p className="eyebrow">{editing ? 'Edit entry' : 'New entry'}</p>
@@ -274,7 +274,7 @@ export function JournalPage() {
               onChange={(e) => onTitleChange(e.target.value)}
             />
             <textarea
-              className="field field-notes mt-3 min-h-[12rem] text-[1rem] leading-[1.65]"
+              className="field field-notes mt-3 min-h-[12rem]"
               placeholder="Write freely… what is God showing you?"
               value={body}
               onChange={(e) => onBodyChange(e.target.value)}

@@ -116,14 +116,14 @@ export function DailyPage() {
       <p className="eyebrow">
         Week {day.weekNumber} · {day.dayLabel}
       </p>
-      <h1 className="mt-2 font-serif text-[1.8rem] font-bold leading-tight text-parchment">
+      <h1 className="mt-2 w-full font-serif text-[1.7rem] font-bold leading-snug text-parchment">
         {day.reading}
       </h1>
       <p className="mt-2 text-sm text-parchment-muted">
         {format(parseISO(day.date), 'EEEE, MMMM d, yyyy')}
       </p>
       {week && (
-        <p className="mt-2 text-xs leading-relaxed text-parchment-muted/90">
+        <p className="text-content mt-2 text-xs text-parchment-muted/90">
           Theme: {week.theme}
         </p>
       )}

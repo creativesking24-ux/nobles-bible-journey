@@ -54,7 +54,7 @@ export function MemoryPage() {
       )}
 
       {hasAnyVerse && (
-        <p className="mb-5 text-sm leading-relaxed text-parchment-muted">
+        <p className="text-content mb-5 w-full text-sm text-parchment-muted">
           Write each weekly verse from memory, then mark it mastered — same flow as the
           paper tracker. Changes save automatically.
         </p>
@@ -141,7 +141,7 @@ function MemoryCard({
             </span>
             <h2 className="font-semibold text-parchment">Week {weekNumber}</h2>
           </div>
-          <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-parchment-muted">
+          <p className="text-content mt-2 line-clamp-2 text-xs text-parchment-muted">
             {theme}
           </p>
         </div>

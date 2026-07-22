@@ -434,7 +434,7 @@ export function ScriptureReader({ reading, focused = false }: ScriptureReaderPro
             <Loader2 className="relative h-7 w-7 animate-spin text-gold" />
           </div>
           <span className="font-medium text-parchment">Loading Scripture…</span>
-          <span className="max-w-[16rem] text-center text-[11px] leading-relaxed text-parchment-muted/90">
+          <span className="text-content w-full px-2 text-center text-[11px] text-parchment-muted/90">
             Fetching {settings.bibleAbbreviation || 'your version'} for {reading}
             {multi ? '' : ' · chapters load one at a time'}
           </span>
@@ -472,11 +472,11 @@ export function ScriptureReader({ reading, focused = false }: ScriptureReaderPro
             </p>
           )}
 
-          <article className={focused ? 'scripture-focus' : ''}>
-            <div className="mb-1 flex items-end justify-between gap-2">
+          <article className={`w-full ${focused ? 'scripture-focus' : ''}`}>
+            <div className="mb-1 flex w-full items-end justify-between gap-2">
               <h3
-                className={`font-serif font-bold leading-snug text-gold-soft ${
-                  focused ? 'text-[1.65rem]' : 'text-2xl'
+                className={`min-w-0 flex-1 font-serif font-bold leading-snug text-gold-soft ${
+                  focused ? 'text-[1.55rem]' : 'text-[1.4rem]'
                 }`}
               >
                 {current.label}
@@ -488,7 +488,7 @@ export function ScriptureReader({ reading, focused = false }: ScriptureReaderPro
               )}
             </div>
 
-            <div className={`mt-5 ${focused ? 'space-y-2.5' : 'space-y-1.5'}`}>
+            <div className={`mt-5 w-full ${focused ? 'space-y-2' : 'space-y-1.5'}`}>
               {current.verses.length > 0 && current.verses[0].number > 0 ? (
                 current.verses.map((v) => {
                   const key = highlightKey(current.ref, v.number)
@@ -503,8 +503,8 @@ export function ScriptureReader({ reading, focused = false }: ScriptureReaderPro
                       onClick={() =>
                         onVerseTap(current.ref, v.number, v.text, current.label)
                       }
-                      className={`w-full rounded-xl px-2.5 text-left transition ${
-                        focused ? 'py-2.5' : 'py-2'
+                      className={`w-full rounded-xl px-1.5 text-left transition sm:px-2.5 ${
+                        focused ? 'py-2' : 'py-1.5'
                       } ${hl ? colorBg[hl.color] : 'hover:bg-white/[0.04]'} ${
                         isSelected
                           ? 'ring-2 ring-gold/60 ring-offset-1 ring-offset-navy-card'
@@ -512,10 +512,8 @@ export function ScriptureReader({ reading, focused = false }: ScriptureReaderPro
                       }`}
                     >
                       <p
-                        className={`font-serif text-parchment ${
-                          focused
-                            ? 'text-[1.05rem] leading-[1.9]'
-                            : 'text-[0.95rem] leading-[1.8]'
+                        className={`scripture-verse font-serif text-parchment ${
+                          focused ? 'text-[1.05rem]' : 'text-[0.98rem]'
                         }`}
                       >
                         <sup className="mr-1.5 select-none align-super text-[0.7rem] font-bold tabular-nums text-gold">
@@ -528,10 +526,8 @@ export function ScriptureReader({ reading, focused = false }: ScriptureReaderPro
                 })
               ) : (
                 <p
-                  className={`font-serif text-parchment/95 ${
-                    focused
-                      ? 'text-[1.05rem] leading-[1.9]'
-                      : 'text-[0.95rem] leading-[1.75]'
+                  className={`scripture-verse font-serif text-parchment/95 ${
+                    focused ? 'text-[1.05rem]' : 'text-[0.98rem]'
                   }`}
                 >
                   {current.text}

@@ -123,7 +123,7 @@ export function SchedulePage() {
               </p>
             </div>
           </div>
-          <h2 className="mt-3 font-serif text-base leading-snug text-parchment">
+          <h2 className="mt-3 w-full font-serif text-base leading-snug text-parchment">
             {week.theme}
           </h2>
           <div className="mt-4">

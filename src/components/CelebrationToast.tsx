@@ -39,7 +39,7 @@ export function CelebrationToast({ celebration, onDismiss }: CelebrationToastPro
   return (
     <div className="celebration-toast no-print pointer-events-none fixed inset-x-0 top-0 z-[60] flex justify-center app-gutter-x pt-3 safe-pt">
       <div
-        className={`pointer-events-auto surface animate-celebrate flex w-full max-w-lg items-start gap-3 rounded-2xl !p-4 ring-1 ${
+        className={`pointer-events-auto surface animate-celebrate app-frame flex w-full items-start gap-3 rounded-2xl !p-4 ring-1 ${
           isWeek ? 'ring-gold/50' : 'ring-success/35'
         }`}
       >

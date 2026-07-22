@@ -159,7 +159,7 @@ export function NotesEditor({
       </div>
 
       <textarea
-        className={`field field-notes ${minH} text-[1rem] leading-[1.65]`}
+        className={`field field-notes w-full ${minH}`}
         placeholder={placeholder}
         value={value}
         onChange={(e) => handleChange(e.target.value)}

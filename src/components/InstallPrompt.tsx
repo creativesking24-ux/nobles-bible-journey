@@ -31,7 +31,7 @@ export function InstallPrompt() {
   if (isStandalone || dismissed || !deferred) return null
 
   return (
-    <div className="install-prompt no-print fixed inset-x-0 bottom-[5.75rem] z-50 mx-auto max-w-lg app-gutter-x landscape:bottom-14 landscape:max-w-4xl">
+    <div className="install-prompt app-frame no-print fixed inset-x-0 bottom-[5.75rem] z-50 app-gutter-x landscape:bottom-14">
       <div className="surface flex items-center gap-3 rounded-2xl !p-3 shadow-2xl ring-1 ring-gold/25">
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-gold-soft/30 to-gold/20 text-gold">
           <Download className="h-5 w-5" />

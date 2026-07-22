@@ -26,10 +26,10 @@ export function Layout() {
   )
 
   return (
-    <div className="app-frame app-shell relative mx-auto flex min-h-dvh w-full max-w-lg flex-col landscape:max-w-4xl">
+    <div className="app-frame app-shell relative flex min-h-dvh w-full flex-col">
       <OfflineBanner />
       <div
-        className={`main-scroll page-transition flex-1 overflow-x-hidden ${
+        className={`main-scroll page-transition w-full flex-1 overflow-x-hidden ${
           hideNav ? 'pb-6 landscape:pb-4' : 'pb-28 landscape:pb-16'
         }`}
         key={location.pathname}
@@ -44,8 +44,8 @@ export function Layout() {
           className="app-nav no-print fixed inset-x-0 bottom-0 z-40 app-gutter-x safe-pb"
           aria-label="Main"
         >
-          <div className="nav-inner mx-auto mb-2.5 max-w-lg landscape:mb-2 landscape:max-w-4xl">
-            <div className="nav-dock flex items-stretch justify-between gap-0.5 rounded-[1.4rem] p-1.5 landscape:gap-1 landscape:rounded-2xl landscape:px-2.5 landscape:py-1.5">
+          <div className="nav-inner mb-2.5 landscape:mb-2">
+            <div className="nav-dock flex w-full items-stretch justify-between gap-0.5 rounded-[1.4rem] p-1.5 landscape:gap-1 landscape:rounded-2xl landscape:px-2.5 landscape:py-1.5">
               {tabs.map(({ to, label, icon: Icon, end }) => (
                 <NavLink
                   key={to}

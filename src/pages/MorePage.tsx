@@ -59,33 +59,33 @@ export function MorePage() {
         action={<ThemeToggle variant="icon" />}
       />
 
-      <Surface className="mb-4 !p-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gold/15 text-gold">
+      <Surface className="mb-5 !p-5">
+        <div className="flex w-full items-center gap-3">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gold/15 text-gold">
             <Sparkles className="h-5 w-5" />
           </div>
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <p className="font-semibold text-parchment">{settings.userName}</p>
-            <p className="text-xs text-parchment-muted">
+            <p className="text-content mt-0.5 text-xs text-parchment-muted">
               Week {week} of 14 · {progress.percent}% complete
             </p>
           </div>
         </div>
       </Surface>
 
-      <div className="space-y-2">
+      <div className="w-full space-y-2.5">
         {links.map(({ to, label, hint, icon: Icon }) => (
           <Link
             key={to}
             to={to}
-            className="surface card-press flex items-center gap-3 rounded-[1.25rem] !p-3.5"
+            className="surface card-press flex w-full items-center gap-3 rounded-[1.35rem] !p-4"
           >
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gold/12 text-gold">
               <Icon className="h-5 w-5" />
             </div>
-            <div className="min-w-0 flex-1">
+            <div className="min-w-0 flex-1 text-left">
               <p className="font-semibold text-parchment">{label}</p>
-              <p className="text-xs text-parchment-muted">{hint}</p>
+              <p className="text-content mt-0.5 text-xs text-parchment-muted">{hint}</p>
             </div>
             <ChevronRight className="h-4 w-4 shrink-0 text-gold" />
           </Link>

@@ -11,7 +11,7 @@ export function PageShell({
 }) {
   return (
     <div
-      className={`page-shell safe-pt relative pb-10 pt-4 landscape:pb-6 landscape:pt-3 ${className}`}
+      className={`page-shell safe-pt relative w-full pb-10 pt-4 landscape:pb-6 landscape:pt-3 ${className}`}
     >
       {children}
     </div>
@@ -30,17 +30,17 @@ export function PageHeader({
   action?: ReactNode
 }) {
   return (
-    <header className="mb-6 flex items-start justify-between gap-3 sm:mb-7">
-      <div className="min-w-0">
+    <header className="mb-6 flex w-full items-start justify-between gap-3 sm:mb-7">
+      <div className="min-w-0 flex-1">
         {eyebrow && <p className="eyebrow mb-1.5">{eyebrow}</p>}
-        <h1 className="font-serif text-[1.7rem] font-bold leading-tight tracking-tight text-parchment">
+        <h1 className="font-serif text-[1.65rem] font-bold leading-snug tracking-tight text-parchment sm:text-[1.7rem]">
           {title}
         </h1>
         {subtitle && (
-          <p className="mt-1.5 text-sm leading-relaxed text-parchment-muted">{subtitle}</p>
+          <p className="text-content mt-1.5 text-sm text-parchment-muted">{subtitle}</p>
         )}
       </div>
-      {action}
+      {action ? <div className="shrink-0">{action}</div> : null}
     </header>
   )
 }
@@ -79,7 +79,7 @@ export function Surface({
     <Comp
       type={onClick ? 'button' : undefined}
       onClick={onClick}
-      className={`${base} rounded-[1.35rem] p-5 text-left ${onClick ? 'card-press w-full' : ''} ${className}`}
+      className={`${base} w-full rounded-[1.35rem] p-5 text-left ${onClick ? 'card-press' : ''} ${className}`}
     >
       {children}
     </Comp>
