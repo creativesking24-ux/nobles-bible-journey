@@ -220,32 +220,32 @@ export function ScriptureReader({ reading, focused = false }: ScriptureReaderPro
       : null)
 
   const surfaceClass = focused
-    ? '!p-0 bg-transparent shadow-none ring-0 !border-0 backdrop-blur-none'
-    : '!p-4'
+    ? '!overflow-visible !p-0 bg-transparent shadow-none ring-0 !border-0 backdrop-blur-none text-left'
+    : '!overflow-visible !p-5 text-left'
 
   return (
     <Surface className={surfaceClass}>
       {/* Header + version */}
       <div
-        className={`mb-3 flex items-start justify-between gap-2 ${
-          focused ? 'px-0.5' : ''
+        className={`mb-3 flex w-full items-start justify-between gap-2 text-left ${
+          focused ? '' : ''
         }`}
       >
-        <div className="flex min-w-0 items-center gap-2">
+        <div className="flex min-w-0 flex-1 items-center gap-2 text-left">
           {!focused && (
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gold/12 text-gold">
               <BookOpen className="h-4 w-4" />
             </div>
           )}
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1 text-left">
             <h2
-              className={`font-semibold text-parchment ${
+              className={`text-left font-semibold text-parchment ${
                 focused ? 'font-serif text-lg' : ''
               }`}
             >
               {focused ? 'Read Scripture' : 'Scripture'}
             </h2>
-            <p className="truncate text-[11px] text-parchment-muted">
+            <p className="w-full text-left text-[11px] leading-snug text-parchment-muted">
               {settings.bibleAbbreviation}
               {multi
                 ? ` · chapter ${chapterIndex + 1} of ${totalChapters}`
@@ -274,8 +274,8 @@ export function ScriptureReader({ reading, focused = false }: ScriptureReaderPro
       </div>
 
       {/* Easy version switcher — preferred translations */}
-      <div className={`mb-4 ${focused ? '' : ''}`}>
-        <p className="mb-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-parchment-muted">
+      <div className="mb-4 w-full text-left">
+        <p className="mb-1.5 text-left text-[10px] font-bold uppercase tracking-[0.12em] text-parchment-muted">
           Version
         </p>
         <div className="no-scrollbar flex gap-1.5 overflow-x-auto pb-0.5">
@@ -428,54 +428,54 @@ export function ScriptureReader({ reading, focused = false }: ScriptureReaderPro
       )}
 
       {state.status === 'loading' && (
-        <div className="scripture-loading flex flex-col items-center gap-3 py-12 text-sm text-parchment-muted">
-          <div className="relative flex h-14 w-14 items-center justify-center">
+        <div className="scripture-loading flex w-full flex-col items-start gap-3 py-10 text-left text-sm text-parchment-muted">
+          <div className="relative flex h-12 w-12 items-center justify-center">
             <div className="absolute inset-0 animate-soft-pulse rounded-full bg-gold/15" />
-            <Loader2 className="relative h-7 w-7 animate-spin text-gold" />
+            <Loader2 className="relative h-6 w-6 animate-spin text-gold" />
           </div>
           <span className="font-medium text-parchment">Loading Scripture…</span>
-          <span className="text-content w-full px-2 text-center text-[11px] text-parchment-muted/90">
+          <span className="w-full text-left text-[11px] leading-relaxed text-parchment-muted/90">
             Fetching {settings.bibleAbbreviation || 'your version'} for {reading}
             {multi ? '' : ' · chapters load one at a time'}
           </span>
-          <div className="mt-1 h-1 w-36 overflow-hidden rounded-full bg-white/10">
+          <div className="mt-1 h-1 w-full max-w-[12rem] overflow-hidden rounded-full bg-white/10">
             <div className="h-full w-1/2 animate-shimmer rounded-full bg-gradient-to-r from-transparent via-gold/70 to-transparent" />
           </div>
         </div>
       )}
 
       {state.status === 'unconfigured' && (
-        <div className="space-y-3 rounded-xl bg-gold/10 p-3 ring-1 ring-gold/25">
+        <div className="w-full space-y-3 rounded-xl bg-gold/10 p-3 text-left ring-1 ring-gold/25">
           <p className="text-sm leading-relaxed text-parchment">{state.message}</p>
           <OpenLinks bibleCom={bibleCom} gateway={gateway} />
         </div>
       )}
 
       {state.status === 'error' && (
-        <div className="space-y-3">
+        <div className="w-full space-y-3 text-left">
           <p className="text-sm leading-relaxed text-parchment-muted">{state.message}</p>
           <OpenLinks bibleCom={bibleCom} gateway={gateway} />
         </div>
       )}
 
       {state.status === 'ready' && current && (
-        <div className="space-y-4">
+        <div className="w-full space-y-4 text-left">
           {state.source === 'fallback' && (
-            <p className="rounded-xl bg-sky-500/10 px-3 py-2 text-xs leading-relaxed text-sky-100 ring-1 ring-sky-400/30">
+            <p className="w-full rounded-xl bg-sky-500/10 px-3 py-2 text-left text-xs leading-relaxed text-sky-100 ring-1 ring-sky-400/30">
               Showing <strong>World English Bible</strong> (public domain) because
               YouVersion is temporarily unavailable. Prefer BSB when it recovers.
             </p>
           )}
           {state.warnings && state.warnings.length > 0 && (
-            <p className="text-[11px] leading-relaxed text-parchment-muted">
+            <p className="w-full text-left text-[11px] leading-relaxed text-parchment-muted">
               {state.warnings[0]}
             </p>
           )}
 
-          <article className={`w-full ${focused ? 'scripture-focus' : ''}`}>
+          <article className={`w-full text-left ${focused ? 'scripture-focus' : ''}`}>
             <div className="mb-1 flex w-full items-end justify-between gap-2">
               <h3
-                className={`min-w-0 flex-1 font-serif font-bold leading-snug text-gold-soft ${
+                className={`min-w-0 flex-1 text-left font-serif font-bold leading-snug text-gold-soft ${
                   focused ? 'text-[1.55rem]' : 'text-[1.4rem]'
                 }`}
               >
@@ -488,7 +488,7 @@ export function ScriptureReader({ reading, focused = false }: ScriptureReaderPro
               )}
             </div>
 
-            <div className={`mt-5 w-full ${focused ? 'space-y-2' : 'space-y-1.5'}`}>
+            <div className="mt-5 w-full space-y-1 overflow-visible text-left">
               {current.verses.length > 0 && current.verses[0].number > 0 ? (
                 current.verses.map((v) => {
                   const key = highlightKey(current.ref, v.number)
@@ -503,31 +503,29 @@ export function ScriptureReader({ reading, focused = false }: ScriptureReaderPro
                       onClick={() =>
                         onVerseTap(current.ref, v.number, v.text, current.label)
                       }
-                      className={`w-full rounded-xl px-1.5 text-left transition sm:px-2.5 ${
-                        focused ? 'py-2' : 'py-1.5'
+                      className={`verse-row px-3 py-2.5 transition ${
+                        focused ? 'py-3' : 'py-2.5'
                       } ${hl ? colorBg[hl.color] : 'hover:bg-white/[0.04]'} ${
-                        isSelected
-                          ? 'ring-2 ring-gold/60 ring-offset-1 ring-offset-navy-card'
-                          : ''
+                        isSelected ? 'is-selected' : ''
                       }`}
                     >
-                      <p
+                      <span
                         className={`scripture-verse font-serif text-parchment ${
-                          focused ? 'text-[1.05rem]' : 'text-[0.98rem]'
+                          focused ? 'text-[1.06rem]' : 'text-[1rem]'
                         }`}
                       >
                         <sup className="mr-1.5 select-none align-super text-[0.7rem] font-bold tabular-nums text-gold">
                           {v.number}
                         </sup>
                         {v.text}
-                      </p>
+                      </span>
                     </button>
                   )
                 })
               ) : (
                 <p
-                  className={`scripture-verse font-serif text-parchment/95 ${
-                    focused ? 'text-[1.05rem]' : 'text-[0.98rem]'
+                  className={`scripture-verse px-1 font-serif text-parchment/95 ${
+                    focused ? 'text-[1.06rem]' : 'text-[1rem]'
                   }`}
                 >
                   {current.text}
@@ -536,12 +534,12 @@ export function ScriptureReader({ reading, focused = false }: ScriptureReaderPro
             </div>
 
             {/* Always show copyright attribution */}
-            <footer className="mt-6 border-t border-white/8 pt-3">
-              <p className="text-[10px] leading-relaxed text-parchment-muted/85">
+            <footer className="mt-6 w-full border-t border-white/8 pt-3 text-left">
+              <p className="w-full text-left text-[10px] leading-relaxed text-parchment-muted/85">
                 {copyrightText ||
                   `${settings.bibleAbbreviation || 'Bible'} text · used under applicable license`}
               </p>
-              <p className="mt-1 text-[10px] text-parchment-muted/60">
+              <p className="mt-1 w-full text-left text-[10px] text-parchment-muted/60">
                 Scripture provided via YouVersion Platform · {settings.bibleTitle || 'Bible'}
               </p>
             </footer>

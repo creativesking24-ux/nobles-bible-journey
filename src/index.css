@@ -266,6 +266,7 @@ body {
 /* ── Premium glass surfaces ── */
 .surface {
   position: relative;
+  overflow: visible;
   background: linear-gradient(
     155deg,
     var(--app-surface-from) 0%,
@@ -278,12 +279,21 @@ body {
   isolation: isolate;
 }
 
-/* Specular top edge (glass highlight) */
+/* Keep real content above glass overlays so frames never cut through text */
+.surface > *,
+.surface-gold > *,
+.surface-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Specular top edge (glass highlight) — decorative only, never over text */
 .surface::before {
   content: '';
   pointer-events: none;
   position: absolute;
   inset: 0;
+  z-index: 0;
   border-radius: inherit;
   padding: 1px;
   background: linear-gradient(
@@ -341,7 +351,9 @@ html.light .surface-gold {
 
 .surface-hero {
   position: relative;
-  overflow: hidden;
+  /* Clip only the decorative glow, not the text — use overflow-hidden on
+     a dedicated glow layer via ::after; keep card itself from clipping copy */
+  overflow: visible;
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.1) 0%, transparent 45%),
     linear-gradient(
@@ -356,16 +368,19 @@ html.light .surface-gold {
     0 1px 0 rgba(255, 255, 255, 0.12) inset;
   color: #f8f3e8;
   backdrop-filter: blur(8px);
+  border-radius: 1.35rem;
 }
 
 .surface-hero::after {
   content: '';
   pointer-events: none;
   position: absolute;
-  inset: -40% -20% auto;
-  height: 70%;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  overflow: hidden;
   background: radial-gradient(
-    ellipse at 30% 0%,
+    ellipse 80% 60% at 30% 0%,
     rgba(212, 175, 55, 0.18),
     transparent 60%
   );
@@ -748,24 +763,58 @@ html.light .nav-item-active {
   width: 100%;
   max-width: 100%;
   margin-inline: 0;
+  text-align: left;
+  overflow: visible;
 }
 
 .scripture-focus p,
 .scripture-verse {
+  display: block;
+  box-sizing: border-box;
   width: 100%;
   max-width: 100%;
-  text-align: left;
+  margin: 0;
+  padding: 0;
+  text-align: left !important;
   line-height: var(--app-line-scripture);
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: none;
+  overflow: visible;
 }
 
-/* Surfaces always fill the content column */
+/* Verse rows are buttons — never center their body text; no clipping */
+button.scripture-verse,
+button .scripture-verse {
+  text-align: left !important;
+  justify-content: flex-start;
+  overflow: visible;
+}
+
+/* Inset selection — avoids ring-offset being clipped by parent frames */
+.verse-row {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  overflow: visible;
+  text-align: left;
+  border-radius: 0.85rem;
+}
+.verse-row.is-selected {
+  box-shadow:
+    inset 0 0 0 2px rgba(212, 175, 55, 0.65),
+    0 0 0 1px rgba(212, 175, 55, 0.2);
+}
+
+/* Surfaces always fill the content column without clipping copy */
 .surface,
 .surface-gold,
 .surface-hero {
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
+  overflow: visible;
 }
 
 .celebration-toast .surface {

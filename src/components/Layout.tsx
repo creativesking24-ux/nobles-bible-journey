@@ -29,7 +29,7 @@ export function Layout() {
     <div className="app-frame app-shell relative flex min-h-dvh w-full flex-col">
       <OfflineBanner />
       <div
-        className={`main-scroll page-transition w-full flex-1 overflow-x-hidden ${
+        className={`main-scroll page-transition w-full flex-1 overflow-x-clip overflow-y-auto ${
           hideNav ? 'pb-6 landscape:pb-4' : 'pb-28 landscape:pb-16'
         }`}
         key={location.pathname}

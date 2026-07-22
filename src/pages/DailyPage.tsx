@@ -113,20 +113,22 @@ export function DailyPage() {
         </div>
       </div>
 
-      <p className="eyebrow">
-        Week {day.weekNumber} · {day.dayLabel}
-      </p>
-      <h1 className="mt-2 w-full font-serif text-[1.7rem] font-bold leading-snug text-parchment">
-        {day.reading}
-      </h1>
-      <p className="mt-2 text-sm text-parchment-muted">
-        {format(parseISO(day.date), 'EEEE, MMMM d, yyyy')}
-      </p>
-      {week && (
-        <p className="text-content mt-2 text-xs text-parchment-muted/90">
-          Theme: {week.theme}
+      <div className="w-full text-left">
+        <p className="eyebrow">
+          Week {day.weekNumber} · {day.dayLabel}
         </p>
-      )}
+        <h1 className="mt-2 w-full text-left font-serif text-[1.7rem] font-bold leading-snug text-parchment">
+          {day.reading}
+        </h1>
+        <p className="mt-2 w-full text-left text-sm text-parchment-muted">
+          {format(parseISO(day.date), 'EEEE, MMMM d, yyyy')}
+        </p>
+        {week && (
+          <p className="mt-2 w-full text-left text-xs leading-relaxed text-parchment-muted/90">
+            Theme: {week.theme}
+          </p>
+        )}
+      </div>
 
       <button
         type="button"
@@ -137,11 +139,11 @@ export function DailyPage() {
         {day.completed ? 'Completed' : 'Mark as Done'}
       </button>
 
-      <div className="mt-6">
+      <div className="mt-6 w-full text-left">
         <ScriptureReader reading={day.reading} focused />
       </div>
 
-      <div className="surface mt-6 rounded-[1.35rem] !p-5">
+      <div className="surface mt-6 w-full rounded-[1.35rem] !p-5 text-left">
         <NotesEditor
           value={day.notes}
           onChange={(v) => setDayNotes(day.id, v)}
@@ -151,31 +153,37 @@ export function DailyPage() {
           onExpandToJournal={expandToJournal}
         />
         {journalHint && (
-          <p className="mt-2 text-center text-xs font-semibold text-success">{journalHint}</p>
+          <p className="mt-2 w-full text-left text-xs font-semibold text-success">
+            {journalHint}
+          </p>
         )}
       </div>
 
       {/* Bottom day nav */}
-      <div className="mt-7 flex gap-2.5">
+      <div className="mt-7 flex w-full gap-2.5">
         <button
           type="button"
           disabled={!prevDay}
           onClick={() => prevDay && navigate(`/day/${prevDay.id}`)}
-          className="btn-ghost flex-1 !py-3.5 text-sm disabled:opacity-35"
+          className="btn-ghost flex min-w-0 flex-1 items-center justify-start !px-3 !py-3.5 text-left text-sm disabled:opacity-35"
         >
-          <ChevronLeft className="h-4 w-4" />
-          {prevDay ? prevDay.reading : 'Previous day'}
+          <ChevronLeft className="h-4 w-4 shrink-0" />
+          <span className="min-w-0 truncate">
+            {prevDay ? prevDay.reading : 'Previous day'}
+          </span>
         </button>
         <button
           type="button"
           disabled={!nextDay}
           onClick={() => nextDay && navigate(`/day/${nextDay.id}`)}
-          className={`flex-1 !py-3.5 text-sm font-bold ${
+          className={`flex min-w-0 flex-1 items-center justify-end gap-0.5 !px-3 !py-3.5 text-right text-sm font-bold ${
             nextDay ? 'btn-primary' : 'btn-ghost opacity-35'
           }`}
         >
-          {nextDay ? nextDay.reading : 'End of plan'}
-          <ChevronRight className="h-4 w-4" />
+          <span className="min-w-0 truncate">
+            {nextDay ? nextDay.reading : 'End of plan'}
+          </span>
+          <ChevronRight className="h-4 w-4 shrink-0" />
         </button>
       </div>
     </PageShell>

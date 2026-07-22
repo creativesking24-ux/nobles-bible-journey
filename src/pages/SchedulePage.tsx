@@ -107,32 +107,32 @@ export function SchedulePage() {
 
       <div className="app-gutter-x flex-1 space-y-3.5 overflow-y-auto pb-8 pt-4">
         {/* Week summary */}
-        <Surface hero className="animate-fade-up !p-4">
-          <div className="flex items-start justify-between gap-3">
-            <div>
+        <Surface hero className="animate-fade-up !p-5">
+          <div className="flex w-full items-start justify-between gap-3">
+            <div className="min-w-0 flex-1 text-left">
               <p className="eyebrow">Week {week.weekNumber}</p>
               <p className="mt-1 text-sm text-parchment-muted">
                 {format(parseISO(week.startDate), 'MMM d')} –{' '}
                 {format(parseISO(week.endDate), 'MMM d, yyyy')}
               </p>
             </div>
-            <div className="rounded-xl bg-black/25 px-2.5 py-1.5 text-center">
+            <div className="shrink-0 rounded-xl bg-black/25 px-2.5 py-1.5 text-center">
               <p className="font-serif text-lg font-bold tabular-nums text-gold">{pct}%</p>
               <p className="text-[9px] uppercase tracking-wide text-parchment-muted">
                 week
               </p>
             </div>
           </div>
-          <h2 className="mt-3 w-full font-serif text-base leading-snug text-parchment">
+          <h2 className="mt-3 w-full text-left font-serif text-base leading-snug text-parchment">
             {week.theme}
           </h2>
-          <div className="mt-4">
-            <div className="mb-1.5 flex justify-between text-xs text-parchment-muted">
+          <div className="mt-4 w-full">
+            <div className="mb-1.5 flex w-full justify-between text-left text-xs text-parchment-muted">
               <span>
                 {doneCount} of {weekDays.length} days complete
               </span>
             </div>
-            <div className="h-2 overflow-hidden rounded-full bg-black/30">
+            <div className="h-2 w-full overflow-hidden rounded-full bg-black/30">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-gold-dim via-gold to-gold-soft transition-all duration-500"
                 style={{ width: `${pct}%` }}
@@ -148,16 +148,16 @@ export function SchedulePage() {
             return (
               <div
                 key={day.id}
-                className={`animate-fade-up surface overflow-hidden rounded-2xl transition-all ${
+                className={`animate-fade-up surface rounded-[1.25rem] transition-all ${
                   day.completed ? 'ring-1 ring-success/25' : ''
                 }`}
                 style={{ animationDelay: `${i * 0.03}s` }}
               >
-                <div className="flex items-center gap-1 p-1.5 pr-2">
+                <div className="flex w-full items-start gap-2 p-3 sm:p-3.5">
                   <button
                     type="button"
                     onClick={() => toggleDay(day.id)}
-                    className={`card-press flex h-12 w-12 shrink-0 items-center justify-center rounded-xl transition ${
+                    className={`card-press mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition ${
                       day.completed
                         ? 'bg-gradient-to-br from-gold-soft to-gold text-navy shadow-md shadow-gold/30'
                         : 'bg-navy/60 text-parchment-muted ring-1 ring-white/10 hover:ring-gold/30'
@@ -171,9 +171,9 @@ export function SchedulePage() {
 
                   <Link
                     to={`/day/${day.id}`}
-                    className="min-w-0 flex-1 rounded-xl px-2 py-2 active:bg-white/5"
+                    className="min-w-0 flex-1 rounded-xl py-0.5 pr-1 text-left active:bg-white/5"
                   >
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
                       <p className="text-[11px] font-semibold uppercase tracking-wide text-parchment-muted">
                         {day.dayLabel}
                       </p>
@@ -186,11 +186,11 @@ export function SchedulePage() {
                         </span>
                       )}
                     </div>
-                    <p className="mt-0.5 truncate font-semibold text-parchment">
+                    <p className="mt-1.5 w-full break-words text-left text-[0.975rem] font-semibold leading-snug text-parchment">
                       {day.reading}
                     </p>
                     {day.notes && !open && (
-                      <p className="mt-0.5 truncate text-xs text-parchment-muted">
+                      <p className="mt-1 w-full text-left text-xs text-parchment-muted">
                         Note saved
                       </p>
                     )}
@@ -198,7 +198,7 @@ export function SchedulePage() {
 
                   <button
                     type="button"
-                    className="rounded-xl p-2.5 text-parchment-muted transition hover:bg-white/5 hover:text-parchment"
+                    className="mt-0.5 shrink-0 rounded-xl p-2 text-parchment-muted transition hover:bg-white/5 hover:text-parchment"
                     onClick={() => setExpanded(open ? null : day.id)}
                     aria-label="Toggle notes"
                     aria-expanded={open}
@@ -212,10 +212,12 @@ export function SchedulePage() {
                 </div>
 
                 {open && (
-                  <div className="border-t border-white/5 bg-black/15 px-3 pb-3 pt-3">
-                    <label className="section-label mb-1.5 block">Quick note</label>
+                  <div className="border-t border-white/5 bg-black/15 px-3.5 pb-4 pt-3 text-left sm:px-4">
+                    <label className="section-label mb-1.5 block text-left">
+                      Quick note
+                    </label>
                     <textarea
-                      className="field"
+                      className="field w-full text-left"
                       rows={3}
                       placeholder="What stood out today?"
                       value={day.notes}
@@ -223,7 +225,7 @@ export function SchedulePage() {
                     />
                     <Link
                       to={`/day/${day.id}`}
-                      className="mt-2 flex items-center justify-center gap-1 text-sm font-semibold text-gold"
+                      className="mt-2.5 flex w-full items-center justify-start gap-1 text-sm font-semibold text-gold"
                     >
                       Open full day view <ChevronRight className="h-4 w-4" />
                     </Link>
@@ -235,18 +237,18 @@ export function SchedulePage() {
         </div>
 
         {/* Memory verse */}
-        <Surface className="!p-4">
-          <div className="mb-3 flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold/12 text-gold">
+        <Surface className="!p-5">
+          <div className="mb-3 flex w-full items-center gap-2.5 text-left">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gold/12 text-gold">
               <Star className="h-4 w-4" />
             </div>
-            <div>
+            <div className="min-w-0 flex-1 text-left">
               <h3 className="font-semibold text-parchment">Memory verse</h3>
               <p className="text-xs text-parchment-muted">Week {week.weekNumber}</p>
             </div>
           </div>
           <textarea
-            className="field"
+            className="field w-full text-left"
             rows={2}
             placeholder="Write the verse reference or text…"
             value={memory}
@@ -271,18 +273,18 @@ export function SchedulePage() {
         </Surface>
 
         {/* Key insight */}
-        <Surface className="!p-4">
-          <div className="mb-3 flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold/12 text-gold">
+        <Surface className="!p-5">
+          <div className="mb-3 flex w-full items-center gap-2.5 text-left">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gold/12 text-gold">
               <Lightbulb className="h-4 w-4" />
             </div>
-            <div>
+            <div className="min-w-0 flex-1 text-left">
               <h3 className="font-semibold text-parchment">Key insight</h3>
               <p className="text-xs text-parchment-muted">This week&apos;s takeaway</p>
             </div>
           </div>
           <textarea
-            className="field"
+            className="field w-full text-left"
             rows={3}
             placeholder="What is God showing you this week?"
             value={insight}
