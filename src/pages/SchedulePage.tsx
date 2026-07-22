@@ -56,7 +56,7 @@ export function SchedulePage() {
 
   return (
     <div className="safe-pt safe-x flex h-full flex-col">
-      <div className="px-4 pt-3 landscape:px-5 landscape:pt-2">
+      <div className="px-4 pt-4 landscape:px-6 landscape:pt-3">
         <PageHeader
           eyebrow="14 weeks"
           title="Study plan"

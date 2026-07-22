@@ -11,7 +11,7 @@ export function PageShell({
 }) {
   return (
     <div
-      className={`page-shell safe-pt safe-x relative px-4 pb-8 pt-3 landscape:px-5 landscape:pb-5 landscape:pt-2 ${className}`}
+      className={`page-shell safe-pt safe-x relative px-4 pb-10 pt-4 landscape:px-6 landscape:pb-6 landscape:pt-3 ${className}`}
     >
       {children}
     </div>
@@ -30,14 +30,14 @@ export function PageHeader({
   action?: ReactNode
 }) {
   return (
-    <header className="mb-5 flex items-start justify-between gap-3">
+    <header className="mb-6 flex items-start justify-between gap-3">
       <div className="min-w-0">
         {eyebrow && <p className="eyebrow mb-1.5">{eyebrow}</p>}
-        <h1 className="font-serif text-[1.65rem] font-bold leading-tight tracking-tight text-parchment">
+        <h1 className="font-serif text-[1.7rem] font-bold leading-tight tracking-tight text-parchment">
           {title}
         </h1>
         {subtitle && (
-          <p className="mt-1 text-sm leading-relaxed text-parchment-muted">{subtitle}</p>
+          <p className="mt-1.5 text-sm leading-relaxed text-parchment-muted">{subtitle}</p>
         )}
       </div>
       {action}
@@ -79,7 +79,7 @@ export function Surface({
     <Comp
       type={onClick ? 'button' : undefined}
       onClick={onClick}
-      className={`${base} rounded-[1.25rem] p-4 text-left ${onClick ? 'card-press w-full' : ''} ${className}`}
+      className={`${base} rounded-[1.35rem] p-5 text-left ${onClick ? 'card-press w-full' : ''} ${className}`}
     >
       {children}
     </Comp>
@@ -135,22 +135,4 @@ export function StatPill({
   )
 }
 
-export function EmptyState({
-  title,
-  body,
-  action,
-}: {
-  title: string
-  body: string
-  action?: ReactNode
-}) {
-  return (
-    <div className="surface rounded-2xl border-dashed px-5 py-10 text-center">
-      <p className="font-serif text-lg text-parchment">{title}</p>
-      <p className="mx-auto mt-2 max-w-xs text-sm leading-relaxed text-parchment-muted">
-        {body}
-      </p>
-      {action && <div className="mt-5">{action}</div>}
-    </div>
-  )
-}
+export { EmptyState } from './EmptyState'

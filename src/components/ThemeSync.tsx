@@ -12,7 +12,7 @@ export function ThemeSync() {
 
     const meta = document.querySelector('meta[name="theme-color"]')
     if (meta) {
-      meta.setAttribute('content', darkMode ? '#0D1B2A' : '#F3EEE4')
+      meta.setAttribute('content', darkMode ? '#0a1420' : '#F3EEE4')
     }
 
     // Keep localStorage in sync for flash-prevention script

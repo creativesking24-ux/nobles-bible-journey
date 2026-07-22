@@ -28,24 +28,24 @@ export function ProgressPage() {
         subtitle="Progress summary & certificate"
       />
 
-      <Surface hero className="mb-4 !p-5">
+      <Surface hero className="mb-5 !p-5 sm:!p-6">
         <div className="flex items-center gap-4">
           <ProgressRing percent={progress.percent} size={112} label="Journey" />
           <div className="min-w-0 flex-1">
             <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-gold">
               Week {currentWeek} of 14
             </p>
-            <p className="mt-1 font-serif text-xl text-parchment">
+            <p className="mt-1.5 font-serif text-xl text-parchment">
               {progress.percent}% complete
             </p>
-            <p className="mt-1 text-sm text-parchment-muted">
+            <p className="mt-1.5 text-sm leading-relaxed text-parchment-muted">
               {progress.completed} of {progress.total} days ·{' '}
               {progress.weeksCompleted}/14 weeks finished
             </p>
           </div>
         </div>
 
-        <div className="mt-4">
+        <div className="mt-5">
           <div className="mb-1.5 flex justify-between text-[10px] font-semibold uppercase tracking-wide text-parchment-muted">
             <span>Overall journey</span>
             <span>{progress.percent}%</span>
@@ -58,7 +58,7 @@ export function ProgressPage() {
           </div>
         </div>
 
-        <div className="mt-4 flex items-center gap-2.5 rounded-xl bg-black/25 px-3 py-2.5 ring-1 ring-white/10">
+        <div className="mt-5 flex items-center gap-2.5 rounded-xl bg-black/25 px-3.5 py-3 ring-1 ring-white/10">
           <Flame
             className={`h-5 w-5 ${
               streak > 0
