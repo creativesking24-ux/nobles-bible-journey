@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { format, parseISO } from 'date-fns'
-import { CalendarDays, ChevronRight, Download, Share2 } from 'lucide-react'
+import { CalendarDays, ChevronRight, Download, Flame, Share2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { ProgressRing } from '../components/ProgressRing'
 import { PageHeader, PageShell, Surface } from '../components/ui'
@@ -12,8 +12,11 @@ export function ProgressPage() {
   const days = useJourneyStore((s) => s.days)
   const journal = useJourneyStore((s) => s.journal)
   const settings = useJourneyStore((s) => s.settings)
+  const streak = useJourneyStore((s) => s.streak)
   const getProgress = useJourneyStore((s) => s.getProgress)
+  const getCurrentWeek = useJourneyStore((s) => s.getCurrentWeek)
   const progress = getProgress()
+  const currentWeek = getCurrentWeek()
   const certRef = useRef<HTMLDivElement>(null)
   const remaining = progress.total - progress.completed
 
@@ -25,16 +28,54 @@ export function ProgressPage() {
         subtitle="Progress summary & certificate"
       />
 
-      <Surface hero className="mb-4 flex items-center gap-4 !p-5">
-        <ProgressRing percent={progress.percent} size={108} label="Journey" />
-        <div className="min-w-0">
-          <p className="font-serif text-lg text-parchment">Overall progress</p>
-          <p className="mt-1 text-sm text-parchment-muted">
-            {progress.completed} of {progress.total} days covered
-          </p>
-          <p className="text-sm text-parchment-muted">
-            {progress.weeksCompleted} of 14 weeks finished
-          </p>
+      <Surface hero className="mb-4 !p-5">
+        <div className="flex items-center gap-4">
+          <ProgressRing percent={progress.percent} size={112} label="Journey" />
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-gold">
+              Week {currentWeek} of 14
+            </p>
+            <p className="mt-1 font-serif text-xl text-parchment">
+              {progress.percent}% complete
+            </p>
+            <p className="mt-1 text-sm text-parchment-muted">
+              {progress.completed} of {progress.total} days ·{' '}
+              {progress.weeksCompleted}/14 weeks finished
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <div className="mb-1.5 flex justify-between text-[10px] font-semibold uppercase tracking-wide text-parchment-muted">
+            <span>Overall journey</span>
+            <span>{progress.percent}%</span>
+          </div>
+          <div className="h-2.5 overflow-hidden rounded-full bg-black/30">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-gold-dim via-gold to-gold-soft transition-all duration-500"
+              style={{ width: `${progress.percent}%` }}
+            />
+          </div>
+        </div>
+
+        <div className="mt-4 flex items-center gap-2.5 rounded-xl bg-black/25 px-3 py-2.5 ring-1 ring-white/10">
+          <Flame
+            className={`h-5 w-5 ${
+              streak > 0
+                ? 'text-orange-400 drop-shadow-[0_0_8px_rgba(251,146,60,0.65)]'
+                : 'text-white/40'
+            }`}
+          />
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-white/55">
+              Current streak
+            </p>
+            <p className="text-sm font-bold text-white">
+              {streak > 0
+                ? `${streak} day${streak === 1 ? '' : 's'} 🔥`
+                : 'Mark a day complete to begin'}
+            </p>
+          </div>
         </div>
       </Surface>
 

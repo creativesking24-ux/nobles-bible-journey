@@ -187,11 +187,52 @@ function normalizeBible(b: ApiBible): BibleVersion {
   }
 }
 
+/** Preferred quick-switch versions for the reading view (when licensed). */
+export const PREFERRED_QUICK_VERSIONS: {
+  id: string
+  abbreviation: string
+  title: string
+}[] = [
+  { id: '3034', abbreviation: 'BSB', title: 'Berean Standard Bible' },
+  { id: '111', abbreviation: 'NIV', title: 'New International Version' },
+  { id: '59', abbreviation: 'ESV', title: 'English Standard Version' },
+  { id: '116', abbreviation: 'NLT', title: 'New Living Translation' },
+]
+
 export const FALLBACK_BIBLES: BibleVersion[] = [
   {
     id: '3034',
     abbreviation: 'BSB',
     title: 'Berean Standard Bible',
+    languageTag: 'en',
+    copyright: 'Public Domain',
+    supportsJourney: true,
+  },
+  {
+    id: '111',
+    abbreviation: 'NIV',
+    title: 'New International Version',
+    languageTag: 'en',
+    supportsJourney: true,
+  },
+  {
+    id: '59',
+    abbreviation: 'ESV',
+    title: 'English Standard Version',
+    languageTag: 'en',
+    supportsJourney: true,
+  },
+  {
+    id: '116',
+    abbreviation: 'NLT',
+    title: 'New Living Translation',
+    languageTag: 'en',
+    supportsJourney: true,
+  },
+  {
+    id: '206',
+    abbreviation: 'WEB',
+    title: 'World English Bible',
     languageTag: 'en',
     copyright: 'Public Domain',
     supportsJourney: true,

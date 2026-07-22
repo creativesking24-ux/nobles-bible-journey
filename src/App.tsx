@@ -10,6 +10,7 @@ import { ProgressPage } from './pages/ProgressPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { CalendarPage } from './pages/CalendarPage'
 import { HighlightsPage } from './pages/HighlightsPage'
+import { MorePage } from './pages/MorePage'
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="highlights" element={<HighlightsPage />} />
           <Route path="journal" element={<JournalPage />} />
           <Route path="progress" element={<ProgressPage />} />
+          <Route path="more" element={<MorePage />} />
           <Route path="settings" element={<SettingsPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>

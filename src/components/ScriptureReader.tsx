@@ -10,6 +10,11 @@ import {
   RefreshCw,
 } from 'lucide-react'
 import {
+  PREFERRED_QUICK_VERSIONS,
+  canReadBible,
+  type BibleVersion,
+} from '../lib/youversion/bibles'
+import {
   fetchPassagesForReading,
   type FetchedPassage,
   type PassageFetchState,
@@ -62,9 +67,11 @@ const colorBg: Record<HighlightColor, string> = Object.fromEntries(
 
 interface ScriptureReaderProps {
   reading: string
+  /** Calmer, distraction-free layout for the day reading view */
+  focused?: boolean
 }
 
-export function ScriptureReader({ reading }: ScriptureReaderProps) {
+export function ScriptureReader({ reading, focused = false }: ScriptureReaderProps) {
   const [state, setState] = useState<PassageFetchState>({ status: 'idle' })
   const [reloadKey, setReloadKey] = useState(0)
   const [chapterIndex, setChapterIndex] = useState(0)
@@ -74,12 +81,35 @@ export function ScriptureReader({ reading }: ScriptureReaderProps) {
     verse: number
   } | null>(null)
   const [highlightMode, setHighlightMode] = useState(true)
+  const [quickOk, setQuickOk] = useState<Record<string, boolean>>({})
 
   const highlights = useJourneyStore((s) => s.highlights)
   const applyHighlight = useJourneyStore((s) => s.applyHighlight)
   const clearHighlight = useJourneyStore((s) => s.clearHighlight)
   const settings = useJourneyStore((s) => s.settings)
+  const updateSettings = useJourneyStore((s) => s.updateSettings)
   const bibleId = settings.bibleId || '3034'
+
+  // Probe preferred quick versions once (offline-friendly after first success)
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      const next: Record<string, boolean> = {}
+      await Promise.all(
+        PREFERRED_QUICK_VERSIONS.map(async (v) => {
+          try {
+            next[v.id] = await canReadBible(v.id)
+          } catch {
+            next[v.id] = v.id === '3034' // BSB often public / fallback
+          }
+        }),
+      )
+      if (!cancelled) setQuickOk(next)
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   useEffect(() => {
     if (isReviewReading(reading)) {
@@ -115,7 +145,6 @@ export function ScriptureReader({ reading }: ScriptureReaderProps) {
     }
   }, [reading, reloadKey, bibleId])
 
-  // Keep chapter index in range when data changes
   useEffect(() => {
     if (state.status === 'ready' && state.passages.length > 0) {
       setChapterIndex((i) => Math.min(i, state.passages.length - 1))
@@ -130,6 +159,16 @@ export function ScriptureReader({ reading }: ScriptureReaderProps) {
   const gateway = `https://www.biblegateway.com/passage/?search=${encodeURIComponent(
     reading.replace(/[–—]/g, '-'),
   )}&version=${encodeURIComponent(settings.bibleAbbreviation || 'NIV')}`
+
+  const selectQuickVersion = (v: (typeof PREFERRED_QUICK_VERSIONS)[number]) => {
+    if (v.id === bibleId) return
+    updateSettings({
+      bibleId: v.id,
+      bibleAbbreviation: v.abbreviation,
+      bibleTitle: v.title,
+    })
+    setReloadKey((k) => k + 1)
+  }
 
   const onVerseTap = (
     passageRef: string,
@@ -174,27 +213,52 @@ export function ScriptureReader({ reading }: ScriptureReaderProps) {
     ? bibleComUrl(current.ref, bibleId, settings.bibleAbbreviation || 'BSB')
     : bibleCom
 
+  const copyrightText =
+    current?.copyright ||
+    (state.status === 'ready' && state.source === 'fallback'
+      ? 'World English Bible (WEB) — Public Domain'
+      : null)
+
+  const surfaceClass = focused
+    ? '!p-0 bg-transparent shadow-none ring-0 !border-0 backdrop-blur-none'
+    : '!p-4'
+
   return (
-    <Surface className="!p-4">
-      <div className="mb-3 flex items-start justify-between gap-2">
+    <Surface className={surfaceClass}>
+      {/* Header + version */}
+      <div
+        className={`mb-3 flex items-start justify-between gap-2 ${
+          focused ? 'px-0.5' : ''
+        }`}
+      >
         <div className="flex min-w-0 items-center gap-2">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gold/12 text-gold">
-            <BookOpen className="h-4 w-4" />
-          </div>
+          {!focused && (
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gold/12 text-gold">
+              <BookOpen className="h-4 w-4" />
+            </div>
+          )}
           <div className="min-w-0">
-            <h2 className="font-semibold text-parchment">Scripture</h2>
+            <h2
+              className={`font-semibold text-parchment ${
+                focused ? 'font-serif text-lg' : ''
+              }`}
+            >
+              {focused ? 'Read Scripture' : 'Scripture'}
+            </h2>
             <p className="truncate text-[11px] text-parchment-muted">
               {settings.bibleAbbreviation}
               {multi
                 ? ` · chapter ${chapterIndex + 1} of ${totalChapters}`
-                : ' · tap verse to highlight'}
+                : focused
+                  ? ' · focused reading'
+                  : ' · tap verse to highlight'}
             </p>
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-1.5">
           <BibleVersionPicker
             compact
-            onChanged={() => setReloadKey((k) => k + 1)}
+            onChanged={(_b: BibleVersion) => setReloadKey((k) => k + 1)}
           />
           {state.status !== 'loading' && !isReviewReading(reading) && (
             <button
@@ -206,6 +270,37 @@ export function ScriptureReader({ reading }: ScriptureReaderProps) {
               <RefreshCw className="h-4 w-4" />
             </button>
           )}
+        </div>
+      </div>
+
+      {/* Easy version switcher — preferred translations */}
+      <div className={`mb-4 ${focused ? '' : ''}`}>
+        <p className="mb-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-parchment-muted">
+          Version
+        </p>
+        <div className="no-scrollbar flex gap-1.5 overflow-x-auto pb-0.5">
+          {PREFERRED_QUICK_VERSIONS.map((v) => {
+            const active = bibleId === v.id
+            const known = quickOk[v.id]
+            // Show all preferred chips; dim unknown until probed
+            return (
+              <button
+                key={v.id}
+                type="button"
+                onClick={() => selectQuickVersion(v)}
+                title={v.title}
+                className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-bold transition ${
+                  active
+                    ? 'bg-gold text-navy shadow-md shadow-gold/25'
+                    : known === false
+                      ? 'bg-white/[0.03] text-parchment-muted/50 ring-1 ring-white/8'
+                      : 'bg-white/5 text-parchment-muted ring-1 ring-white/10 hover:text-parchment'
+                }`}
+              >
+                {v.abbreviation}
+              </button>
+            )
+          })}
         </div>
       </div>
 
@@ -255,8 +350,8 @@ export function ScriptureReader({ reading }: ScriptureReaderProps) {
         </div>
       )}
 
-      {/* Highlight toolbar */}
-      {state.status === 'ready' && current && (
+      {/* Highlight toolbar — quieter in focused mode */}
+      {state.status === 'ready' && current && !focused && (
         <div className="mb-4 rounded-xl bg-black/25 p-3 ring-1 ring-white/8">
           <div className="mb-2 flex items-center justify-between gap-2">
             <div className="flex items-center gap-1.5 text-xs font-semibold text-parchment-muted">
@@ -333,12 +428,19 @@ export function ScriptureReader({ reading }: ScriptureReaderProps) {
       )}
 
       {state.status === 'loading' && (
-        <div className="flex flex-col items-center gap-2 py-8 text-sm text-parchment-muted">
-          <Loader2 className="h-5 w-5 animate-spin text-gold" />
-          <span>Loading Scripture…</span>
-          <span className="text-[11px] text-parchment-muted/80">
-            Chapters load one at a time
+        <div className="scripture-loading flex flex-col items-center gap-3 py-12 text-sm text-parchment-muted">
+          <div className="relative flex h-14 w-14 items-center justify-center">
+            <div className="absolute inset-0 animate-soft-pulse rounded-full bg-gold/15" />
+            <Loader2 className="relative h-7 w-7 animate-spin text-gold" />
+          </div>
+          <span className="font-medium text-parchment">Loading Scripture…</span>
+          <span className="max-w-[16rem] text-center text-[11px] leading-relaxed text-parchment-muted/90">
+            Fetching {settings.bibleAbbreviation || 'your version'} for {reading}
+            {multi ? '' : ' · chapters load one at a time'}
           </span>
+          <div className="mt-1 h-1 w-36 overflow-hidden rounded-full bg-white/10">
+            <div className="h-full w-1/2 animate-shimmer rounded-full bg-gradient-to-r from-transparent via-gold/70 to-transparent" />
+          </div>
         </div>
       )}
 
@@ -370,10 +472,13 @@ export function ScriptureReader({ reading }: ScriptureReaderProps) {
             </p>
           )}
 
-          {/* Single chapter view */}
-          <article>
+          <article className={focused ? 'scripture-focus' : ''}>
             <div className="mb-1 flex items-end justify-between gap-2">
-              <h3 className="font-serif text-2xl font-bold leading-snug text-gold-soft">
+              <h3
+                className={`font-serif font-bold leading-snug text-gold-soft ${
+                  focused ? 'text-[1.65rem]' : 'text-2xl'
+                }`}
+              >
                 {current.label}
               </h3>
               {multi && (
@@ -383,7 +488,7 @@ export function ScriptureReader({ reading }: ScriptureReaderProps) {
               )}
             </div>
 
-            <div className="mt-4 space-y-1.5">
+            <div className={`mt-5 ${focused ? 'space-y-2.5' : 'space-y-1.5'}`}>
               {current.verses.length > 0 && current.verses[0].number > 0 ? (
                 current.verses.map((v) => {
                   const key = highlightKey(current.ref, v.number)
@@ -398,15 +503,21 @@ export function ScriptureReader({ reading }: ScriptureReaderProps) {
                       onClick={() =>
                         onVerseTap(current.ref, v.number, v.text, current.label)
                       }
-                      className={`w-full rounded-xl px-2.5 py-2 text-left transition ${
-                        hl ? colorBg[hl.color] : 'hover:bg-white/[0.04]'
-                      } ${
+                      className={`w-full rounded-xl px-2.5 text-left transition ${
+                        focused ? 'py-2.5' : 'py-2'
+                      } ${hl ? colorBg[hl.color] : 'hover:bg-white/[0.04]'} ${
                         isSelected
                           ? 'ring-2 ring-gold/60 ring-offset-1 ring-offset-navy-card'
                           : ''
                       }`}
                     >
-                      <p className="font-serif text-[0.95rem] leading-[1.8] text-parchment">
+                      <p
+                        className={`font-serif text-parchment ${
+                          focused
+                            ? 'text-[1.05rem] leading-[1.9]'
+                            : 'text-[0.95rem] leading-[1.8]'
+                        }`}
+                      >
                         <sup className="mr-1.5 select-none align-super text-[0.7rem] font-bold tabular-nums text-gold">
                           {v.number}
                         </sup>
@@ -416,20 +527,30 @@ export function ScriptureReader({ reading }: ScriptureReaderProps) {
                   )
                 })
               ) : (
-                <p className="font-serif text-[0.95rem] leading-[1.75] text-parchment/95">
+                <p
+                  className={`font-serif text-parchment/95 ${
+                    focused
+                      ? 'text-[1.05rem] leading-[1.9]'
+                      : 'text-[0.95rem] leading-[1.75]'
+                  }`}
+                >
                   {current.text}
                 </p>
               )}
             </div>
 
-            {current.copyright && (
-              <p className="mt-4 text-[10px] leading-relaxed text-parchment-muted/80">
-                {current.copyright}
+            {/* Always show copyright attribution */}
+            <footer className="mt-6 border-t border-white/8 pt-3">
+              <p className="text-[10px] leading-relaxed text-parchment-muted/85">
+                {copyrightText ||
+                  `${settings.bibleAbbreviation || 'Bible'} text · used under applicable license`}
               </p>
-            )}
+              <p className="mt-1 text-[10px] text-parchment-muted/60">
+                Scripture provided via YouVersion Platform · {settings.bibleTitle || 'Bible'}
+              </p>
+            </footer>
           </article>
 
-          {/* Bottom chapter nav for multi-chapter days */}
           {multi && (
             <div className="flex gap-2 pt-1">
               <button
@@ -465,7 +586,17 @@ export function ScriptureReader({ reading }: ScriptureReaderProps) {
               versionId={bibleId}
               abbreviation={settings.bibleAbbreviation || 'BSB'}
             />
-            <OpenLinks bibleCom={chapterBibleCom} gateway={gateway} />
+            {!focused && <OpenLinks bibleCom={chapterBibleCom} gateway={gateway} />}
+            {focused && (
+              <a
+                href={chapterBibleCom}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-ghost flex w-full !py-2.5 text-sm"
+              >
+                Open on bible.com <ExternalLink className="h-3.5 w-3.5" />
+              </a>
+            )}
           </div>
         </div>
       )}

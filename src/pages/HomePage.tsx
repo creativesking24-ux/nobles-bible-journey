@@ -1,20 +1,20 @@
+import { useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { format, parseISO } from 'date-fns'
+import { format } from 'date-fns'
 import {
   BookOpen,
-  CalendarDays,
   CheckCircle2,
   ChevronRight,
+  ExternalLink,
   Flame,
-  Highlighter,
   Quote,
-  Settings,
   Sparkles,
-  Trophy,
 } from 'lucide-react'
+import { CelebrationToast, type Celebration } from '../components/CelebrationToast'
 import { ProgressRing } from '../components/ProgressRing'
 import { ThemeToggle } from '../components/ThemeToggle'
-import { IconButton, PageShell, StatPill, Surface } from '../components/ui'
+import { PageShell, Surface } from '../components/ui'
+import { bibleComUrlForReading, isReviewReading } from '../lib/youversion/refs'
 import { useJourneyStore } from '../store/useJourneyStore'
 
 export function HomePage() {
@@ -26,6 +26,7 @@ export function HomePage() {
   const toggleDay = useJourneyStore((s) => s.toggleDay)
   const settings = useJourneyStore((s) => s.settings)
   const weeks = useJourneyStore((s) => s.weeks)
+  const days = useJourneyStore((s) => s.days)
 
   const today = getTodayDay()
   const week = getCurrentWeek()
@@ -36,155 +37,219 @@ export function HomePage() {
     : undefined
   const firstName = settings.userName.split(' ')[0] || 'Friend'
 
+  const [celebration, setCelebration] = useState<Celebration>(null)
+
+  const openBibleUrl = today
+    ? isReviewReading(today.reading)
+      ? 'https://www.bible.com/bible'
+      : bibleComUrlForReading(
+          today.reading,
+          settings.bibleId || '3034',
+          settings.bibleAbbreviation || 'BSB',
+        )
+    : null
+
+  const onMarkDone = useCallback(() => {
+    if (!today || today.completed) return
+
+    const weekDays = days.filter((d) => d.weekNumber === today.weekNumber)
+    const othersDone = weekDays
+      .filter((d) => d.id !== today.id)
+      .every((d) => d.completed)
+
+    toggleDay(today.id)
+    const nextStreak = useJourneyStore.getState().streak
+
+    if (othersDone) {
+      setCelebration({ type: 'week', weekNumber: today.weekNumber })
+    } else {
+      setCelebration({ type: 'day', reading: today.reading })
+      if (nextStreak >= 2) {
+        window.setTimeout(() => {
+          setCelebration((c) =>
+            c?.type === 'day' ? { type: 'streak', days: nextStreak } : c,
+          )
+        }, 2800)
+      }
+    }
+  }, [today, toggleDay, days])
+
   return (
     <PageShell>
-      {/* Header */}
-      <header className="animate-fade-up mb-5 flex items-start justify-between gap-3">
+      <CelebrationToast
+        celebration={celebration}
+        onDismiss={() => setCelebration(null)}
+      />
+
+      {/* Compact header */}
+      <header className="animate-fade-up mb-4 flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-gold/10 px-2.5 py-1 ring-1 ring-gold/25">
-            <Sparkles className="h-3 w-3 text-gold" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-gold">
-              90+ Day Journey
-            </span>
-          </div>
-          <h1 className="font-serif text-[1.7rem] font-bold leading-tight text-parchment">
+          <p className="eyebrow mb-1">Week {week} of 14 · {progress.percent}%</p>
+          <h1 className="font-serif text-[1.55rem] font-bold leading-tight text-parchment">
             Hello, {firstName}
           </h1>
-          <p className="mt-1 text-sm text-parchment-muted">
+          <p className="mt-0.5 text-sm text-parchment-muted">
             {format(new Date(), 'EEEE · MMMM d')}
           </p>
         </div>
-        <div className="flex shrink-0 items-center gap-2">
-          <ThemeToggle variant="icon" />
-          <IconButton to="/settings" label="Settings">
-            <Settings className="h-5 w-5" />
-          </IconButton>
-        </div>
+        <ThemeToggle variant="icon" />
       </header>
 
-      {/* Progress hero */}
-      <section className="animate-fade-up-delay surface-hero mb-4 overflow-hidden rounded-[1.5rem] p-5">
-        <div className="flex items-start justify-between gap-2">
-          <div>
-            <p className="section-label">Your progress</p>
-            <h2 className="mt-1 font-serif text-xl text-parchment">
-              Week {week}
-              <span className="text-parchment-muted"> of 14</span>
-            </h2>
+      {/* 1. TODAY'S READING — primary */}
+      <section className="animate-fade-up-delay mb-4">
+        <Surface className="!p-5 ring-1 ring-gold/20">
+          <div className="mb-3 flex items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-gold/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-gold ring-1 ring-gold/25">
+              <Sparkles className="h-3 w-3" />
+              Today&apos;s reading
+            </span>
+            {today?.completed && (
+              <span className="rounded-full bg-success/15 px-2 py-0.5 text-[10px] font-bold uppercase text-success">
+                Done
+              </span>
+            )}
           </div>
-          <Link
-            to="/progress"
-            className="flex items-center gap-0.5 rounded-full bg-white/5 px-2.5 py-1 text-xs font-semibold text-gold ring-1 ring-white/10"
-          >
-            Details <ChevronRight className="h-3.5 w-3.5" />
-          </Link>
-        </div>
 
-        <div className="mt-5 flex items-center gap-5">
-          <ProgressRing percent={progress.percent} size={118} label="Done" />
-          <div className="min-w-0 flex-1 space-y-2.5">
-            <StatPill
-              icon={<Flame className="h-4 w-4" />}
-              label="Streak"
-              value={`${streak} day${streak === 1 ? '' : 's'}`}
-            />
-            <StatPill
-              icon={<BookOpen className="h-4 w-4" />}
-              label="Days checked"
-              value={`${progress.completed} / ${progress.total}`}
-            />
-            <StatPill
-              icon={<Trophy className="h-4 w-4" />}
-              label="Weeks finished"
-              value={`${progress.weeksCompleted} / 14`}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Today's focus — primary action first for intuition */}
-      <section className="animate-fade-up-delay-2 mb-4">
-        <div className="mb-2 flex items-center justify-between px-0.5">
-          <h3 className="section-label">Today&apos;s focus</h3>
-          {today && (
-            <Link
-              to={`/day/${today.id}`}
-              className="flex items-center gap-0.5 text-xs font-semibold text-gold"
-            >
-              Full view <ChevronRight className="h-3.5 w-3.5" />
-            </Link>
-          )}
-        </div>
-
-        <Surface className="!p-5">
           {today ? (
             <>
-              <div className="flex items-start gap-3">
-                <div
-                  className={`mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${
-                    today.completed
-                      ? 'bg-success/15 text-success ring-1 ring-success/30'
-                      : 'bg-gold/15 text-gold ring-1 ring-gold/30'
-                  }`}
-                >
-                  <BookOpen className="h-5 w-5" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs text-parchment-muted">
-                    Week {today.weekNumber}
-                    {today.isReview ? ' · Review day' : ' · Daily reading'}
-                  </p>
-                  <p className="mt-0.5 font-serif text-xl font-bold leading-snug text-gold-soft">
-                    {today.reading}
-                  </p>
-                  {todayTheme && (
-                    <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-parchment-muted">
-                      {todayTheme}
-                    </p>
-                  )}
-                </div>
-              </div>
+              <p className="font-serif text-[1.85rem] font-bold leading-snug text-gold-soft">
+                {today.reading}
+              </p>
+              <p className="mt-2 text-sm text-parchment-muted">
+                Week {today.weekNumber}
+                {today.isReview ? ' · Review day' : ' · Daily reading'}
+                {todayTheme ? ` · ${todayTheme}` : ''}
+              </p>
 
               <div className="mt-5 space-y-2.5">
                 <button
                   type="button"
-                  onClick={() => toggleDay(today.id)}
-                  className={today.completed ? 'btn-success' : 'btn-primary'}
+                  onClick={() => {
+                    if (today.completed) {
+                      toggleDay(today.id)
+                      return
+                    }
+                    onMarkDone()
+                  }}
+                  className={`${today.completed ? 'btn-success' : 'btn-primary'} !py-4 text-base`}
                 >
                   <CheckCircle2
-                    className={`h-5 w-5 ${today.completed ? 'check-pop' : ''}`}
+                    className={`h-6 w-6 ${today.completed ? 'check-pop' : ''}`}
                   />
-                  {today.completed ? 'Completed today' : 'Mark reading complete'}
+                  {today.completed ? 'Completed today' : 'Mark as Done'}
                 </button>
-                <Link to={`/day/${today.id}`} className="btn-ghost w-full">
-                  Add notes & insights
+
+                <Link
+                  to={`/day/${today.id}`}
+                  className="btn-ghost flex w-full !py-3.5 text-sm font-bold"
+                >
+                  <BookOpen className="h-5 w-5 text-gold" />
+                  Open full Bible text
+                  <ChevronRight className="ml-auto h-4 w-4 text-gold" />
                 </Link>
+
+                {openBibleUrl && !today.isReview && (
+                  <a
+                    href={openBibleUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn-ghost flex w-full !py-3 text-sm"
+                  >
+                    Open in Bible App / web
+                    <ExternalLink className="ml-auto h-4 w-4" />
+                  </a>
+                )}
               </div>
             </>
           ) : (
             <>
-              <p className="font-serif text-lg text-parchment">Browse your plan</p>
+              <p className="font-serif text-xl text-parchment">No reading scheduled today</p>
               <p className="mt-2 text-sm leading-relaxed text-parchment-muted">
-                No reading is scheduled for today&apos;s calendar date. The journey runs
-                Jun 15 – Sep 20, 2026 — open the plan anytime to check off days.
+                The journey runs Jun 15 – Sep 20, 2026. Browse the schedule anytime to check
+                off days.
               </p>
               <Link to="/schedule" className="btn-primary mt-5">
-                Open study plan
+                Open schedule
               </Link>
             </>
           )}
         </Surface>
       </section>
 
-      {/* Verse */}
-      <section className="animate-fade-up-delay-3 mb-4">
+      {/* 2. Streak + progress summary */}
+      <section className="animate-fade-up-delay-2 surface-hero mb-4 overflow-hidden rounded-[1.5rem] p-5">
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-gold">
+              Your journey
+            </p>
+            <h2 className="mt-1 font-serif text-xl text-white">
+              Week {week}
+              <span className="text-white/70"> of 14</span>
+            </h2>
+            <p className="mt-0.5 text-sm text-white/75">{progress.percent}% of the path</p>
+          </div>
+          <Link
+            to="/progress"
+            className="flex items-center gap-0.5 rounded-full bg-white/10 px-2.5 py-1 text-xs font-semibold text-gold ring-1 ring-white/15"
+          >
+            Details <ChevronRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+
+        <div className="mt-5 flex items-center gap-5">
+          <ProgressRing percent={progress.percent} size={112} label="Complete" />
+          <div className="min-w-0 flex-1 space-y-3">
+            <div className="flex items-center gap-2.5 rounded-xl bg-black/25 px-3 py-2.5 ring-1 ring-white/10">
+              <Flame
+                className={`h-5 w-5 ${
+                  streak > 0 ? 'text-orange-400 drop-shadow-[0_0_8px_rgba(251,146,60,0.65)]' : 'text-white/40'
+                }`}
+              />
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-wide text-white/55">
+                  Streak
+                </p>
+                <p className="text-sm font-bold text-white">
+                  {streak > 0 ? `${streak} day${streak === 1 ? '' : 's'} 🔥` : 'Start today'}
+                </p>
+              </div>
+            </div>
+            <div className="rounded-xl bg-black/25 px-3 py-2.5 ring-1 ring-white/10">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-white/55">
+                Days checked
+              </p>
+              <p className="text-sm font-bold text-white">
+                {progress.completed} / {progress.total}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Overall bar */}
+        <div className="mt-4">
+          <div className="mb-1.5 flex justify-between text-[10px] font-semibold uppercase tracking-wide text-white/55">
+            <span>Overall progress</span>
+            <span>{progress.percent}%</span>
+          </div>
+          <div className="h-2.5 overflow-hidden rounded-full bg-black/30">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-gold-dim via-gold to-gold-soft transition-all duration-500"
+              style={{ width: `${progress.percent}%` }}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Verse of the day */}
+      <section className="animate-fade-up-delay-3 mb-2">
         <Surface gold className="!p-4">
           <div className="flex items-start gap-3">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gold/15 text-gold">
               <Quote className="h-4 w-4" />
             </div>
             <div>
-              <p className="eyebrow">Verse of the day</p>
+              <p className="eyebrow">Encouragement</p>
               <p className="mt-2 font-serif text-[0.95rem] leading-relaxed text-parchment">
                 {verse}
               </p>
@@ -192,57 +257,6 @@ export function HomePage() {
           </div>
         </Surface>
       </section>
-
-      {/* Quick links */}
-      <section className="animate-fade-up-delay-3 grid grid-cols-3 gap-2.5">
-        <Link to="/schedule" className="surface card-press group rounded-2xl p-3.5">
-          <div className="mb-2.5 flex h-9 w-9 items-center justify-center rounded-xl bg-gold/10 text-gold ring-1 ring-gold/20">
-            <BookOpen className="h-4.5 w-4.5 h-4 w-4" />
-          </div>
-          <p className="text-[10px] font-medium text-parchment-muted">Plan</p>
-          <p className="mt-0.5 text-sm font-semibold text-parchment">14 weeks</p>
-        </Link>
-        <Link to="/calendar" className="surface card-press group rounded-2xl p-3.5">
-          <div className="mb-2.5 flex h-9 w-9 items-center justify-center rounded-xl bg-gold/10 text-gold ring-1 ring-gold/20">
-            <CalendarDays className="h-4 w-4" />
-          </div>
-          <p className="text-[10px] font-medium text-parchment-muted">Year</p>
-          <p className="mt-0.5 text-sm font-semibold text-parchment">Calendar</p>
-        </Link>
-        <Link to="/progress" className="surface card-press group rounded-2xl p-3.5">
-          <div className="mb-2.5 flex h-9 w-9 items-center justify-center rounded-xl bg-gold/10 text-gold ring-1 ring-gold/20">
-            <Trophy className="h-4 w-4" />
-          </div>
-          <p className="text-[10px] font-medium text-parchment-muted">Wins</p>
-          <p className="mt-0.5 text-sm font-semibold text-parchment">Certificate</p>
-        </Link>
-      </section>
-
-      <div className="mt-3 space-y-2">
-        <Link
-          to="/highlights"
-          className="flex items-center justify-between rounded-2xl bg-white/5 px-4 py-3 text-sm ring-1 ring-white/8"
-        >
-          <span className="inline-flex items-center gap-2 text-parchment-muted">
-            <Highlighter className="h-4 w-4 text-gold" />
-            Scripture highlights
-          </span>
-          <ChevronRight className="h-4 w-4 text-gold" />
-        </Link>
-        <Link
-          to="/memory"
-          className="flex items-center justify-between rounded-2xl bg-white/5 px-4 py-3 text-sm ring-1 ring-white/8"
-        >
-          <span className="text-parchment-muted">Memory verses master list</span>
-          <ChevronRight className="h-4 w-4 text-gold" />
-        </Link>
-      </div>
-
-      {today && (
-        <p className="mt-5 text-center text-[11px] leading-relaxed text-parchment-muted">
-          {format(parseISO(today.date), 'MMMM d, yyyy')}
-        </p>
-      )}
     </PageShell>
   )
 }
