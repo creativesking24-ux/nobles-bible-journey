@@ -55,8 +55,8 @@ export function SchedulePage() {
   if (!week) return null
 
   return (
-    <div className="safe-pt flex h-full flex-col">
-      <div className="px-4 pt-3">
+    <div className="safe-pt safe-x flex h-full flex-col">
+      <div className="px-4 pt-3 landscape:px-5 landscape:pt-2">
         <PageHeader
           eyebrow="14 weeks"
           title="Study plan"
@@ -64,7 +64,7 @@ export function SchedulePage() {
           action={
             <Link
               to="/calendar"
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl surface text-gold"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl surface text-gold landscape:h-10 landscape:w-10"
               aria-label="Year calendar"
             >
               <CalendarDays className="h-5 w-5" />
@@ -74,7 +74,7 @@ export function SchedulePage() {
       </div>
 
       {/* Sticky week picker */}
-      <div className="sticky top-0 z-20 border-b border-white/5 bg-navy/80 px-4 pb-3 backdrop-blur-xl">
+      <div className="sticky top-0 z-20 border-b border-theme bg-navy/80 px-4 pb-3 backdrop-blur-xl landscape:px-5 landscape:pb-2">
         <div ref={tabsRef} className="no-scrollbar flex gap-2 overflow-x-auto py-1">
           {weeks.map((w) => {
             const wDays = days.filter((d) => d.weekNumber === w.weekNumber)

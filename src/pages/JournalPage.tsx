@@ -121,7 +121,7 @@ export function JournalPage() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-28 right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-gold-soft to-gold text-navy shadow-xl shadow-gold/40 transition hover:scale-105 active:scale-95"
+        className="journal-fab fixed bottom-28 right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-gold-soft to-gold text-navy shadow-xl shadow-gold/40 transition hover:scale-105 active:scale-95 landscape:bottom-16 landscape:right-3 landscape:h-11 landscape:w-11"
         aria-label="Add entry"
       >
         <Plus className="h-7 w-7" strokeWidth={2.5} />

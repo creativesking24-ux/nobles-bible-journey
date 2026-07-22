@@ -134,12 +134,29 @@ html.light body {
     linear-gradient(180deg, #f0e8d8 0%, #e4d9c4 45%, #ddd2bc 100%);
 }
 
-/* Safe areas */
+/* Safe areas (portrait + landscape notches / home indicator) */
 .safe-pb {
-  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
 }
 .safe-pt {
-  padding-top: max(0.75rem, env(safe-area-inset-top));
+  padding-top: max(0.75rem, env(safe-area-inset-top, 0px));
+}
+.safe-x {
+  padding-left: max(0px, env(safe-area-inset-left, 0px));
+  padding-right: max(0px, env(safe-area-inset-right, 0px));
+}
+
+/* Prevent horizontal bounce / overflow when rotating */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Prefer dynamic viewport height (handles mobile browser chrome + rotate) */
+.min-h-dvh {
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 /* ── Premium glass surfaces ── */
@@ -612,6 +629,60 @@ html.light .theme-toggle button.active {
 
 html.light .app-frame {
   box-shadow: 0 0 0 1px rgba(120, 90, 40, 0.04);
+}
+
+/* ── Landscape mobile / short height ── */
+@media (orientation: landscape) and (max-height: 500px) {
+  .safe-pt {
+    padding-top: max(0.35rem, env(safe-area-inset-top, 0px));
+  }
+
+  .page-shell {
+    padding-top: 0.35rem;
+    padding-bottom: 0.75rem;
+  }
+
+  /* Compact sticky schedule week chips */
+  .sticky {
+    top: 0;
+  }
+
+  /* Smaller floating journal FAB so it doesn’t cover content */
+  .journal-fab {
+    bottom: 4.25rem !important;
+    right: 0.75rem !important;
+    width: 2.75rem !important;
+    height: 2.75rem !important;
+  }
+
+  /* Install prompt sits above compact nav */
+  .install-prompt {
+    bottom: 3.75rem !important;
+  }
+
+  /* Offline banner tighter */
+  .offline-banner-wrap {
+    padding-top: 0.35rem !important;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 420px) {
+  /* Very short landscape: icon+label side-by-side already; tighten further */
+  .nav-dock {
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+  }
+
+  .nav-link span {
+    font-size: 10px;
+  }
+}
+
+/* Wider landscape tablets / large phones */
+@media (orientation: landscape) and (min-width: 700px) {
+  .app-shell {
+    max-width: 56rem; /* ~4xl */
+  }
 }
 
 @media print {

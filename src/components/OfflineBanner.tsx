@@ -24,8 +24,8 @@ export function OfflineBanner() {
 
   if (!online) {
     return (
-      <div className="no-print sticky top-0 z-50 px-3 pt-2 safe-pt">
-        <div className="surface mx-auto flex max-w-lg items-start gap-3 rounded-2xl !p-3 ring-1 ring-orange-400/25">
+      <div className="offline-banner-wrap no-print sticky top-0 z-50 px-3 pt-2 safe-pt safe-x">
+        <div className="surface mx-auto flex max-w-lg items-start gap-3 rounded-2xl !p-3 ring-1 ring-orange-400/25 landscape:max-w-4xl">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-orange-500/15 text-orange-300">
             <WifiOff className="h-4 w-4" />
           </div>
@@ -48,8 +48,8 @@ export function OfflineBanner() {
 
   if (syncing) {
     return (
-      <div className="no-print sticky top-0 z-50 px-3 pt-2 safe-pt">
-        <div className="surface mx-auto flex max-w-lg items-center gap-3 rounded-2xl !p-3">
+      <div className="offline-banner-wrap no-print sticky top-0 z-50 px-3 pt-2 safe-pt safe-x">
+        <div className="surface mx-auto flex max-w-lg items-center gap-3 rounded-2xl !p-3 landscape:max-w-4xl">
           <Loader2 className="h-4 w-4 animate-spin text-gold" />
           <p className="text-xs font-semibold text-parchment-muted">
             Syncing offline changes…
@@ -61,8 +61,8 @@ export function OfflineBanner() {
 
   if (lastSyncResult) {
     return (
-      <div className="no-print sticky top-0 z-50 px-3 pt-2 safe-pt">
-        <div className="surface mx-auto flex max-w-lg items-center gap-3 rounded-2xl !p-3 ring-1 ring-success/30">
+      <div className="offline-banner-wrap no-print sticky top-0 z-50 px-3 pt-2 safe-pt safe-x">
+        <div className="surface mx-auto flex max-w-lg items-center gap-3 rounded-2xl !p-3 ring-1 ring-success/30 landscape:max-w-4xl">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-success/15 text-success">
             <Wifi className="h-4 w-4" />
           </div>
@@ -84,8 +84,8 @@ export function OfflineBanner() {
 
   if (pendingCount > 0) {
     return (
-      <div className="no-print sticky top-0 z-50 px-3 pt-2 safe-pt">
-        <div className="surface mx-auto flex max-w-lg items-center gap-3 rounded-2xl !p-3">
+      <div className="offline-banner-wrap no-print sticky top-0 z-50 px-3 pt-2 safe-pt safe-x">
+        <div className="surface mx-auto flex max-w-lg items-center gap-3 rounded-2xl !p-3 landscape:max-w-4xl">
           <CloudUpload className="h-4 w-4 text-gold" />
           <p className="min-w-0 flex-1 text-xs text-parchment-muted">
             {pendingCount} change{pendingCount === 1 ? '' : 's'} ready to sync

@@ -10,7 +10,9 @@ export function PageShell({
   className?: string
 }) {
   return (
-    <div className={`safe-pt relative px-4 pb-8 pt-3 ${className}`}>
+    <div
+      className={`page-shell safe-pt safe-x relative px-4 pb-8 pt-3 landscape:px-5 landscape:pb-5 landscape:pt-2 ${className}`}
+    >
       {children}
     </div>
   )

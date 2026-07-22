@@ -44,7 +44,7 @@ export default defineConfig(({ mode }) => {
           theme_color: '#0D1B2A',
           background_color: '#0D1B2A',
           display: 'standalone',
-          orientation: 'portrait',
+          orientation: 'any',
           start_url: '/',
           scope: '/',
           categories: ['education', 'lifestyle'],
