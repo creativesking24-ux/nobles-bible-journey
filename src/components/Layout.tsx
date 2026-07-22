@@ -21,6 +21,7 @@ export function Layout() {
   const location = useLocation()
   const hideNav =
     location.pathname.startsWith('/day/') || location.pathname === '/settings'
+  const isHome = location.pathname === '/'
 
   return (
     <div className="app-frame app-shell relative mx-auto flex min-h-dvh w-full max-w-lg flex-col landscape:max-w-4xl">
@@ -38,7 +39,10 @@ export function Layout() {
       {!hideNav && (
         <nav className="app-nav no-print fixed inset-x-0 bottom-0 z-40 px-3 landscape:px-4 safe-pb safe-x">
           <div className="nav-inner mx-auto mb-2 max-w-lg landscape:mb-1.5 landscape:max-w-4xl">
-            <div className="nav-dock flex items-stretch justify-between gap-0.5 rounded-[1.4rem] p-1.5 landscape:gap-1 landscape:rounded-2xl landscape:px-2 landscape:py-1">
+            <div
+              className="nav-dock flex items-stretch justify-between gap-0.5 rounded-[1.4rem] p-1.5 landscape:gap-1 landscape:rounded-2xl landscape:px-2 landscape:py-1"
+              style={isHome ? { opacity: 0.67 } : undefined}
+            >
               {tabs.map(({ to, label, icon: Icon, end }) => (
                 <NavLink
                   key={to}
